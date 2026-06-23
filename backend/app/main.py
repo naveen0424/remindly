@@ -3,8 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import engine, Base
 import app.models  # noqa: F401 — registers all models with SQLAlchemy
 
-# Import routers (we'll add these in later stages)
-# from app.routers import auth, reminders, groups, notifications
+from app.routers import auth
+# from app.routers import reminders, groups, notifications  ← coming next
 
 app = FastAPI(
     title="Remindly API",
@@ -20,6 +20,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Register routers
+app.include_router(auth.router)
 
 # Create all DB tables on startup
 @app.on_event("startup")
