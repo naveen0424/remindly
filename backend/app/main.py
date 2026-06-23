@@ -3,8 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import engine, Base
 import app.models  # noqa: F401
 
-from app.routers import auth, reminders, groups
-# from app.routers import notifications  ← coming next
+from app.routers import auth, reminders, groups, notifications
+from app.services.scheduler import start_scheduler, stop_scheduler
 
 app = FastAPI(
     title="Remindly API",
@@ -23,10 +23,16 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(reminders.router)
 app.include_router(groups.router)
+app.include_router(notifications.router)
 
 @app.on_event("startup")
 def startup():
     Base.metadata.create_all(bind=engine)
+    start_scheduler()
+
+@app.on_event("shutdown")
+def shutdown():
+    stop_scheduler()
 
 @app.get("/")
 def root():
