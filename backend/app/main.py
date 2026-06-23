@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import engine, Base
+import app.models  # noqa: F401 — registers all models with SQLAlchemy
 
 # Import routers (we'll add these in later stages)
 # from app.routers import auth, reminders, groups, notifications
